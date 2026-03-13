@@ -1,0 +1,81 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: mawrid-dev-be-api
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php-fpm
+    env_file:
+      - .env.development
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - mawrid_dev_net
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: mawrid-dev-be-queue
+    restart: unless-stopped
+    working_dir: /var/www
+    command: php artisan queue:work redis --queue=ai-dispatch,low --sleep=3 --tries=3 --timeout=90
+    env_file:
+      - .env.development
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./:/var/www
+    networks:
+      - mawrid_dev_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: mawrid-dev-be-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    networks:
+      - mawrid_dev_net
+    depends_on:
+      - app
+
+  db:
+    image: postgres:16
+    container_name: mawrid-dev-be-db
+    restart: unless-stopped
+    command: postgres -p 5433
+    env_file:
+      - .env.development
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5433"
+    networks:
+      - mawrid_dev_net
+
+  redis:
+    image: redis:alpine
+    container_name: mawrid-dev-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - mawrid_dev_net
+
+volumes:
+  pgdata:
+
+networks:
+  mawrid_dev_net:
+    external: true
