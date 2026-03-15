@@ -14,6 +14,7 @@ services:
       - redis
     volumes:
       - ./:/var/www
+      - vendor_data:/var/www/vendor
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - mawrid_dev_net
@@ -33,6 +34,7 @@ services:
       - redis
     volumes:
       - ./:/var/www
+      - vendor_data:/var/www/vendor
     networks:
       - mawrid_dev_net
 
@@ -44,6 +46,7 @@ services:
       - "8000:80"
     volumes:
       - ./:/var/www
+      - vendor_data:/var/www/vendor
       - ./docker/nginx:/etc/nginx/conf.d
     networks:
       - mawrid_dev_net
@@ -75,6 +78,7 @@ services:
 
 volumes:
   pgdata:
+  vendor_data:
 
 networks:
   mawrid_dev_net:
