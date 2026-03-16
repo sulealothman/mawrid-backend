@@ -18,13 +18,6 @@ class AiChatService
                 'kb_id' => $kbId,
                 'query' => $query,
                 'messages' => $history,
-                'retrieval' => [
-                    'top_k' => 5,
-                ],
-                'generation' => [
-                    'temperature' => 0.2,
-                    'max_tokens' => 800,
-                ],
             ]);
 
         if (!$response->successful()) {
