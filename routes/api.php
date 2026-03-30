@@ -19,8 +19,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
-
-
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     });
@@ -62,28 +60,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/kb/{kbId}', [KnowledgeBaseController::class, 'update']);
     Route::delete('/kb/{kbId}', [KnowledgeBaseController::class, 'remove']);           // soft delete
     Route::delete('/kb/{kbId}/force', [KnowledgeBaseController::class, 'destroy']); // hard delete
-    Route::get(
-        '/kb/{knowledgeBase}/chats',
-        [ChatController::class, 'index']
-    );
 });
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    
-    Route::put('/chats/{chat}', [ChatController::class, 'update']);
-    Route::delete('/chats/{chat}', [ChatController::class, 'remove']);
     Route::get(
         '/kb/{knowledgeBase}/chats',
         [ChatController::class, 'index']
     );
     Route::get('/chats/{chatId}', [ChatController::class, 'show']);
     Route::post(
-        '/kb/{knowledgeBase}/chats/send',
-        [ChatController::class, 'send']
+        '/kb/{knowledgeBase}/chats/store',
+        [ChatController::class, 'store']
     );
+    Route::put('/chats/{chat}', [ChatController::class, 'update']);
+    Route::delete('/chats/{chat}', [ChatController::class, 'remove']);
 });
-
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -96,9 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/files/{file}/force', [FileController::class, 'delete']);
 });
 
-
-
-Route::post(
-    '/internal/file-operations/webhook',
-    [FileOperationController::class, 'webhook']
-)->withoutMiddleware(['auth:sanctum']);
+Route::prefix('internal')->group(function () {
+    Route::post('/file-operations/webhook', [FileOperationController::class, 'webhook']);
+    Route::post('/chat/finalize', [ChatController::class, 'finalize']);
+})->withoutMiddleware(['auth:sanctum']);

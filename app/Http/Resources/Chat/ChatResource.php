@@ -9,6 +9,15 @@ class ChatResource extends JsonResource
 {
     public static $wrap = null;
 
+    protected ?array $session;
+
+
+    public function __construct($resource, ?array $session = null)
+    {
+        parent::__construct($resource);
+        $this->session = $session;
+    }
+
     public function toArray(Request $request): array
     {
         return [
@@ -20,6 +29,7 @@ class ChatResource extends JsonResource
             'messages' => ChatMessageResource::collection(
                 $this->whenLoaded('messages')
             ),
+            'session' => $this->session,
         ];
     }
 }

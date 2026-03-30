@@ -37,6 +37,9 @@ return [
 
     'ai' => [
         'url' => env('AI_SERVICE_URL'),
+        'ws_url' => env('AI_WS_URL'),
+        'ws_token_secret' => env('AI_WS_TOKEN_SECRET'),
+        'ws_token_ttl' => env('AI_WS_TOKEN_TTL', 120),
         'internal_key' => env('AI_INTERNAL_KEY', 'default_internal_key'),
         'stream' => env('AI_STREAM_NAME', 'ai:jobs'),
         'group' => env('AI_WORKER_GROUP', 'default'),

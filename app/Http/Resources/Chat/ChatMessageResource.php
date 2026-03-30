@@ -12,8 +12,11 @@ class ChatMessageResource extends JsonResource
         return [
             'id' => $this->id,
             'chat_id' => $this->chat_id,
+            'parent_id' => $this->parent_id,
             'role' => $this->role,
             'content' => $this->content,
+            'status' => $this->status,
+            'status_message' => $this->status_message,
             'sources' => $this->sources,
             'usage' => $this->usage,
             'created_at' => $this->created_at,

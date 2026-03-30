@@ -14,10 +14,13 @@ class ChatMessage extends Model
 
     protected $fillable = [
         'chat_id',
+        'parent_id',
         'role',
         'content',
         'sources',
         'usage',
+        'status',
+        'status_message',
     ];
 
     protected $casts = [
@@ -28,5 +31,15 @@ class ChatMessage extends Model
     public function chat()
     {
         return $this->belongsTo(Chat::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(ChatMessage::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(ChatMessage::class, 'parent_id');
     }
 }
